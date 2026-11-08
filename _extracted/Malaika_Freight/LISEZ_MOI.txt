@@ -1,0 +1,15 @@
+MALAIKA FREIGHT - Dossier de demarrage
+
+1. Ouvrir le portail stylise :
+   docs/portal/index.html
+   (idealement via http://127.0.0.1:8765/portal/ )
+
+2. Lire le cahier des charges EN STYLE (pas le .md brut) :
+   docs/portal/reader.html?doc=../_extracted/Malaika_Freight/CAHIER_DES_CHARGES.md
+
+3. Tester la maquette operations :
+   docs/_extracted/Malaika_Freight/index.html
+
+4. Cette maquette utilise des donnees fictives et ne constitue pas un logiciel de production.
+
+5. Valider architecture, securite, donnees et deploiement avant toute mise en service.

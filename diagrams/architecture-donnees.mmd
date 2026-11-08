@@ -1,0 +1,112 @@
+%% Malaïka Freight — Modèle de données conceptuel (Lot A + extensions)
+
+erDiagram
+  AGENCIES ||--o{ USERS : employs
+  AGENCIES ||--o{ RESERVATIONS : origin_or_dest
+  AGENCIES ||--o{ PARCELS : origin_or_dest
+
+  USERS ||--o{ AUDIT_LOGS : performs
+  USERS ||--o{ TRACKING_EVENTS : records
+
+  CUSTOMERS ||--o{ ADDRESSES : has
+  CUSTOMERS ||--o{ RESERVATIONS : books
+  CUSTOMERS ||--o{ PARCELS : sender_or_recipient
+
+  RESERVATIONS ||--o| PARCELS : converts_to
+
+  PARCELS ||--|{ PARCEL_PIECES : contains
+  PARCELS ||--o{ TRACKING_EVENTS : timeline
+  PARCELS ||--o| INVOICES : billed_as
+  PARCELS }o--o| SHIPMENTS : consolidated_in
+
+  PRICE_RULES ||--o{ PARCELS : prices
+
+  INVOICES ||--|{ INVOICE_LINES : has
+  INVOICES ||--o{ PAYMENTS : settled_by
+
+  SHIPMENTS ||--o{ SHIPMENT_PARCELS : includes
+  PARCELS ||--o{ SHIPMENT_PARCELS : listed_in
+
+  PACKAGING_SKUS ||--o{ INVENTORY_MOVEMENTS : stocked
+  AGENCIES ||--o{ INVENTORY_MOVEMENTS : location
+  AGENCIES ||--o{ CASH_ACCOUNTS : owns
+
+  FEATURE_FLAGS ||--o{ FEATURE_FLAGS : toggles
+
+  AGENCIES {
+    bigint id PK
+    string code
+    string city
+    string country
+  }
+
+  USERS {
+    bigint id PK
+    string role
+    bigint agency_id FK
+    boolean is_active
+  }
+
+  CUSTOMERS {
+    bigint id PK
+    string full_name
+    string phone
+    string email
+  }
+
+  RESERVATIONS {
+    bigint id PK
+    string reference
+    string status
+    decimal estimated_weight_kg
+  }
+
+  PARCELS {
+    bigint id PK
+    string reference
+    string status
+    string currency
+    string tracking_token
+    decimal billable_weight_kg
+  }
+
+  PARCEL_PIECES {
+    bigint id PK
+    string piece_reference
+    int sequence_number
+    int label_version
+  }
+
+  TRACKING_EVENTS {
+    bigint id PK
+    string status
+    datetime recorded_at
+  }
+
+  INVOICES {
+    bigint id PK
+    string number
+    string currency
+    decimal total
+    decimal balance_due
+  }
+
+  PAYMENTS {
+    bigint id PK
+    decimal amount
+    string currency
+    string method
+  }
+
+  SHIPMENTS {
+    bigint id PK
+    string manifesto_ref
+    string status
+  }
+
+  PRICE_RULES {
+    bigint id PK
+    string corridor
+    decimal price_per_kg
+    string currency
+  }

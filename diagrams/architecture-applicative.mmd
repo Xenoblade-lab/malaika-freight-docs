@@ -1,0 +1,61 @@
+%% Malaïka Freight — Architecture applicative en couches
+
+flowchart TB
+  subgraph Presentation["Présentation"]
+    B1["Blade Public"]
+    B2["Blade Client"]
+    B3["Blade Admin"]
+    B4["Templates PDF"]
+    B5["Templates Email"]
+    FE["Tailwind · Alpine · Vite"]
+  end
+
+  subgraph HTTP["Interface HTTP"]
+    CTL["Controllers"]
+    REQ["FormRequests"]
+    RES["API Resources"]
+    MW["Middleware\nrole · agency · active"]
+  end
+
+  subgraph Application["Application"]
+    ACT["Actions métier"]
+    SVC["Services\nPricing · Invoice · Label · Tracking · Dashboard"]
+    JOB["Jobs / Queues"]
+    NOTIF["Notifications"]
+    EVT["Events / Listeners"]
+  end
+
+  subgraph Domain["Domaine"]
+    EN["Enums / Statuts"]
+    SM["State machines"]
+    VO["Value objects\nMoney · Weight · Token"]
+    POL["Policies"]
+  end
+
+  subgraph Infra["Infrastructure"]
+    ELO["Eloquent Models"]
+    STOR["Filesystem"]
+    MAIL["Mailer"]
+    QR["QR / Barcode"]
+    CACHE["Cache"]
+  end
+
+  FE --> B1 & B2 & B3
+  B1 & B2 & B3 & B4 & B5 --> CTL
+  CTL --> REQ
+  CTL --> MW
+  CTL --> ACT
+  CTL --> RES
+  ACT --> SVC
+  SVC --> SM
+  SVC --> VO
+  SVC --> EN
+  SVC --> POL
+  SVC --> ELO
+  SVC --> STOR
+  SVC --> QR
+  ACT --> EVT
+  EVT --> JOB
+  EVT --> NOTIF
+  JOB --> MAIL
+  ELO --> CACHE

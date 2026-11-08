@@ -1,0 +1,54 @@
+%% Malaïka Freight — Rôles, agences et contrôle d'accès
+
+flowchart TB
+  subgraph Roles["Rôles"]
+    SA["Superadministratrice"]
+    RM["Responsable Madrid"]
+    RK["Responsable Kinshasa"]
+    AR["Agent réception"]
+    AL["Agent livraison"]
+    CO["Comptable"]
+    CL["Client"]
+  end
+
+  subgraph Scope["Portée données"]
+    ALL["Toutes agences"]
+    MAD["Agence Madrid"]
+    KIN["Agence Kinshasa"]
+    OWN["Ses propres dossiers"]
+  end
+
+  SA --> ALL
+  RM --> MAD
+  RK --> KIN
+  AR --> MAD
+  AR --> KIN
+  AL --> MAD
+  AL --> KIN
+  CO --> ALL
+  CL --> OWN
+
+  subgraph Controls["Contrôles techniques"]
+    AUTH["Authentification\nsession / Sanctum"]
+    MW["Middleware\nrole · active · agency"]
+    POL["Policies Eloquent"]
+    AUD["Audit log"]
+    TOK["Tracking token\nsuivi public limité"]
+  end
+
+  SA & RM & RK & AR & AL & CO & CL --> AUTH
+  AUTH --> MW --> POL
+  POL --> AUD
+  CL --> TOK
+
+  subgraph Forbidden["Interdits structurels"]
+    X1["Agent Madrid ≠ données Kinshasa hors droit"]
+    X2["Suivi public ≠ PII / prix"]
+    X3["EUR + USD sans taux daté"]
+    X4["Transfert argent sans feature flag + conformité"]
+  end
+
+  POL --> X1
+  TOK --> X2
+  CO --> X3
+  SA --> X4

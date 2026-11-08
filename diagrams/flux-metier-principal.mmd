@@ -1,0 +1,28 @@
+%% Malaïka Freight — Flux métier principal (prospect → remise)
+
+flowchart LR
+  A["Prospect\nconsulte le site"] --> B["Estimateur\ntarif indicatif"]
+  B --> C["Pré-réservation\nconsentements"]
+  C --> D["Reservation\nPré-réservé"]
+  D --> E["Réception agent\nvérif · pesée"]
+  E --> F["Création Parcel\n+ Parcel Pieces"]
+  F --> G["Calcul tarif\nfrais · devise"]
+  G --> H["Facture PDF"]
+  G --> I["Étiquette PDF\nQR + Code 128"]
+  F --> J["Association\nmanifeste Lot B"]
+  F --> K["Scans étapes\ntracking_events"]
+  K --> L["Suivi public\njeton opaque"]
+  K --> M{"Disponible\npour retrait ?"}
+  M -->|oui| N["Livraison / retrait"]
+  N --> O["Preuve de remise"]
+  O --> P["Avis client\noptionnel"]
+  M -->|incident| Q["Incident\n+ traitement"]
+  Q --> K
+
+  style D fill:#eef3f7,stroke:#11263b
+  style F fill:#eef3f7,stroke:#11263b
+  style H fill:#f7f2e8,stroke:#c49b58
+  style I fill:#f7f2e8,stroke:#c49b58
+  style L fill:#e5f4e9,stroke:#286844
+  style O fill:#e5f4e9,stroke:#286844
+  style Q fill:#fff1d9,stroke:#946017

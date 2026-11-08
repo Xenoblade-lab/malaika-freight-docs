@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Malaïka Freight — Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#1a3348",
+        primaryTextColor: "#f4efe6",
+        primaryBorderColor: "#c49b58",
+        lineColor: "#8fa0b0",
+        secondaryColor: "#243e55",
+        tertiaryColor: "#f4f6f8",
+        background: "#0d1b27",
+        mainBkg: "#1a3348",
+        nodeBorder: "#c49b58",
+        clusterBkg: "#132433",
+        titleColor: "#f4efe6",
+        edgeLabelBackground: "#11263b"
+      },
+      flowchart: { curve: "basis", padding: 16 },
+      securityLevel: "loose"
+    });
+    window.mermaidReady = mermaid;
+  </script>
+  <style>
+    :root {
+      --navy: #11263b;
+      --navy-deep: #0a1621;
+      --navy-mid: #1a3348;
+      --gold: #c49b58;
+      --gold-soft: #e6c88e;
+      --ink: #1b2d3d;
+      --muted: #6d7f90;
+      --line: rgba(196, 155, 88, 0.22);
+      --paper: #f3f0ea;
+      --paper-2: #e8eef3;
+      --white: #fffdf9;
+      --ok: #2f6b4f;
+      --warn: #9a6b1f;
+      --radius: 18px;
+      --shadow: 0 24px 60px rgba(10, 22, 33, 0.18);
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-ui: "Outfit", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ui);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(196,155,88,.18), transparent 55%),
+        radial-gradient(900px 500px at 100% 0%, rgba(17,38,59,.12), transparent 50%),
+        linear-gradient(180deg, #f7f4ee 0%, #eef3f7 42%, #f7f4ee 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; }
+
+    .grain {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      opacity: .035;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 28px;
+      backdrop-filter: blur(16px);
+      background: rgba(10, 22, 33, 0.78);
+      border-bottom: 1px solid rgba(196,155,88,.2);
+      color: var(--white);
+      animation: dropIn .7s ease both;
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      letter-spacing: .04em;
+      font-weight: 600;
+    }
+    .brand em {
+      font-style: italic;
+      color: var(--gold-soft);
+      font-weight: 500;
+    }
+    .topnav nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .topnav nav a {
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: rgba(255,253,249,.78);
+      font-size: .9rem;
+      font-weight: 500;
+      transition: background .25s, color .25s;
+    }
+    .topnav nav a:hover,
+    .topnav nav a.active {
+      background: rgba(196,155,88,.18);
+      color: var(--gold-soft);
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: min(92vh, 860px);
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        linear-gradient(120deg, rgba(8,16,24,.55) 0%, rgba(17,38,59,.35) 40%, rgba(8,16,24,.72) 100%),
+        url("https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80") center/cover no-repeat;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 180px;
+      background: linear-gradient(transparent, rgba(243,240,234,.98));
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto 92px;
+      animation: rise .9s cubic-bezier(.2,.7,.2,1) both;
+    }
+    .hero h1 {
+      margin: 0 0 14px;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(3.2rem, 8vw, 5.8rem);
+      line-height: .95;
+      letter-spacing: -.02em;
+      max-width: 11ch;
+    }
+    .hero h1 span {
+      display: block;
+      color: var(--gold-soft);
+      font-style: italic;
+      font-weight: 500;
+    }
+    .hero p {
+      margin: 0 0 28px;
+      max-width: 38rem;
+      font-size: 1.08rem;
+      line-height: 1.55;
+      color: rgba(255,253,249,.86);
+      font-weight: 300;
+    }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 600;
+      font-size: .95rem;
+      transition: transform .2s, background .2s, border-color .2s, color .2s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy-deep);
+    }
+    .btn-primary:hover { background: var(--gold-soft); }
+    .btn-ghost {
+      background: transparent;
+      border-color: rgba(255,253,249,.35);
+      color: var(--white);
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold-soft);
+      color: var(--gold-soft);
+    }
+    .btn-dark {
+      background: var(--navy);
+      color: var(--white);
+    }
+    .btn-dark:hover { background: var(--navy-mid); }
+    .btn-line {
+      background: transparent;
+      border-color: rgba(17,38,59,.2);
+      color: var(--navy);
+    }
+
+    main { position: relative; z-index: 1; }
+
+    .section {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 72px 0 24px;
+    }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: .75rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+    }
+    .section h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 600;
+      line-height: 1.05;
+      color: var(--navy);
+    }
+    .section .lead {
+      margin: 10px 0 0;
+      max-width: 40rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .doc-link {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+      padding: 22px;
+      border-radius: var(--radius);
+      background: rgba(255,253,249,.72);
+      border: 1px solid rgba(17,38,59,.08);
+      box-shadow: 0 10px 30px rgba(17,38,59,.04);
+      transition: transform .25s, border-color .25s, box-shadow .25s;
+      animation: rise .7s ease both;
+    }
+    .doc-link:hover {
+      transform: translateY(-4px);
+      border-color: rgba(196,155,88,.45);
+      box-shadow: var(--shadow);
+    }
+    .doc-link .tag {
+      display: inline-flex;
+      width: fit-content;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(196,155,88,.12);
+      color: #8a6a2f;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .doc-link h3 {
+      margin: 18px 0 8px;
+      font-size: 1.2rem;
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .doc-link p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.45;
+      flex: 1;
+    }
+    .doc-link .go {
+      margin-top: 18px;
+      color: var(--navy);
+      font-weight: 600;
+      font-size: .9rem;
+    }
+    .doc-link.wide { grid-column: span 6; }
+    .doc-link.featured {
+      background:
+        linear-gradient(145deg, rgba(17,38,59,.96), rgba(26,51,72,.92)),
+        var(--navy);
+      color: var(--white);
+      border-color: transparent;
+    }
+    .doc-link.featured h3,
+    .doc-link.featured .go { color: var(--white); }
+    .doc-link.featured p { color: rgba(255,253,249,.72); }
+    .doc-link.featured .tag {
+      background: rgba(196,155,88,.22);
+      color: var(--gold-soft);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+    .side {
+      position: sticky;
+      top: 86px;
+      padding: 16px;
+      border-radius: var(--radius);
+      background: rgba(255,253,249,.8);
+      border: 1px solid rgba(17,38,59,.08);
+    }
+    .side h4 {
+      margin: 0 0 12px;
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .side button {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--navy);
+      font-weight: 500;
+      margin-bottom: 4px;
+      transition: background .2s;
+    }
+    .side button:hover,
+    .side button.active {
+      background: rgba(17,38,59,.07);
+    }
+    .side button.active {
+      background: rgba(196,155,88,.16);
+      color: #7a5a22;
+      font-weight: 600;
+    }
+
+    .panel {
+      padding: 28px;
+      border-radius: calc(var(--radius) + 4px);
+      background: rgba(255,253,249,.88);
+      border: 1px solid rgba(17,38,59,.08);
+      box-shadow: 0 16px 40px rgba(17,38,59,.05);
+      min-height: 420px;
+    }
+    .panel[hidden] { display: none !important; }
+    .panel h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--navy);
+    }
+    .panel .sub {
+      margin: 0 0 22px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eef3f7;
+      color: #36536b;
+      font-size: .82rem;
+      font-weight: 600;
+    }
+    .chip.gold {
+      background: rgba(196,155,88,.15);
+      color: #7a5a22;
+    }
+    .chip.ok {
+      background: #e5f4e9;
+      color: var(--ok);
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, rgba(17,38,59,.04), transparent);
+      border: 1px solid rgba(17,38,59,.06);
+    }
+    .step .num {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: var(--gold-soft);
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+    .step strong { display: block; margin-bottom: 4px; color: var(--navy); }
+    .step span { color: var(--muted); font-size: .92rem; line-height: 1.45; }
+
+    .mermaid-wrap {
+      overflow: auto;
+      padding: 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #0f2030, #132a3d);
+      border: 1px solid rgba(196,155,88,.25);
+    }
+    .mermaid { display: flex; justify-content: center; }
+    .mermaid svg { max-width: 100%; height: auto; }
+
+    .diagram-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .diagram-tabs button {
+      border: 1px solid rgba(17,38,59,.12);
+      background: var(--white);
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: .85rem;
+      color: var(--navy);
+    }
+    .diagram-tabs button.active {
+      background: var(--navy);
+      color: var(--gold-soft);
+      border-color: var(--navy);
+    }
+
+    .lot-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .lot {
+      padding: 18px;
+      border-radius: 16px;
+      background: var(--white);
+      border: 1px solid rgba(17,38,59,.08);
+    }
+    .lot b {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .lot span { color: var(--muted); font-size: .88rem; line-height: 1.4; }
+
+    .footer {
+      margin-top: 80px;
+      padding: 34px 0 50px;
+      border-top: 1px solid rgba(17,38,59,.08);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .footer-inner {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .footer .brand {
+      color: var(--navy);
+      font-size: 1.2rem;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 960px) {
+      .doc-link, .doc-link.wide { grid-column: span 6; }
+      .shell { grid-template-columns: 1fr; }
+      .side { position: static; display: flex; gap: 6px; overflow: auto; padding: 10px; }
+      .side h4 { display: none; }
+      .side button { width: auto; white-space: nowrap; }
+      .lot-strip { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      .topnav { padding: 12px 16px; }
+      .topnav nav { display: none; }
+      .hero-inner { width: calc(100% - 32px); margin-bottom: 72px; }
+      .section { width: calc(100% - 32px); padding-top: 56px; }
+      .doc-link, .doc-link.wide { grid-column: span 12; }
+      .lot-strip { grid-template-columns: 1fr; }
+      .panel { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topnav">
+    <a class="brand" href="#top">MALAÏKA <em>Freight</em></a>
+    <nav>
+      <a href="#docs">Documents</a>
+      <a href="#parcours">Parcours</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#lots">Lots</a>
+      <a href="../_extracted/Malaika_Freight/index.html">Maquette</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <h1>Malaïka <span>Freight</span></h1>
+      <p>Plateforme de fret Madrid ↔ Kinshasa — documentation produit, plans de livraison et architecture, présentés comme un studio moderne.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#docs">Explorer la documentation</a>
+        <a class="btn btn-ghost" href="#architecture">Voir l’architecture</a>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="section reveal" id="docs">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Bibliothèque</p>
+          <h2>Tout le pack, accessible clairement</h2>
+          <p class="lead">Les fichiers Markdown restent la source de vérité. Ce portail les organise pour lire, présenter et décider plus vite.</p>
+        </div>
+      </div>
+
+      <div class="doc-grid">
+        <a class="doc-link featured wide" href="./reader.html?doc=../DOCUMENTATION-MALAIKA-FREIGHT.md">
+          <span class="tag">Produit</span>
+          <h3>Documentation complète</h3>
+          <p>Vision, rôles, flux métier, règles critiques, stack, API et critères de recette.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link wide" href="./reader.html?doc=../PLAN-ETAPES.md">
+          <span class="tag">Exécution</span>
+          <h3>Plan étape par étape</h3>
+          <p>Checklist séquentielle Lot A (~55 étapes), prête à cocher au fil du développement.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link" href="./reader.html?doc=../PLAN-DETAILLE.md">
+          <span class="tag">Pilotage</span>
+          <h3>Plan détaillé</h3>
+          <p>Phases P0–P15, livrables, risques et estimations.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link" href="./reader.html?doc=../ARCHITECTURE.md">
+          <span class="tag">Technique</span>
+          <h3>Architecture</h3>
+          <p>Couches, sécurité, données, déploiement et ADR stack.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link" href="./reader.html?doc=../STRUCTURE-ARBORESCENCE.md">
+          <span class="tag">Code</span>
+          <h3>Structure & arborescence</h3>
+          <p>Organisation Laravel cible, modules et conventions.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link" href="./reader.html?doc=../_extracted/Malaika_Freight/CAHIER_DES_CHARGES.md">
+          <span class="tag">Client</span>
+          <h3>Cahier des charges</h3>
+          <p>Référence fonctionnelle transmise par le client.</p>
+          <span class="go">Lire en style →</span>
+        </a>
+        <a class="doc-link" href="../_extracted/Malaika_Freight/index.html">
+          <span class="tag">UX</span>
+          <h3>Maquette interactive</h3>
+          <p>Studio opérationnel de démonstration (données fictives).</p>
+          <span class="go">Ouvrir →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section reveal" id="parcours">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Expérience</p>
+          <h2>Du prospect à la remise</h2>
+          <p class="lead">Un parcours unique, lisible pour le métier comme pour le développement.</p>
+        </div>
+      </div>
+
+      <div class="shell">
+        <aside class="side" id="parcoursNav"></aside>
+        <div>
+          <article class="panel" data-panel="flux" id="panel-flux">
+            <h3>Flux principal</h3>
+            <p class="sub">Pré-réservation → réception → documents → suivi → livraison.</p>
+            <div class="steps">
+              <div class="step"><div class="num">01</div><div><strong>Pré-réserver</strong><span>Estimateur indicatif, consentements, statut Pré-réservé.</span></div></div>
+              <div class="step"><div class="num">02</div><div><strong>Réceptionner</strong><span>Pesée réelle, pièces uniques, admissibilité du contenu.</span></div></div>
+              <div class="step"><div class="num">03</div><div><strong>Documenter</strong><span>Facture PDF + étiquette 100×150 avec QR opaque.</span></div></div>
+              <div class="step"><div class="num">04</div><div><strong>Suivre</strong><span>Scans agents + page publique limitée par jeton.</span></div></div>
+              <div class="step"><div class="num">05</div><div><strong>Remettre</strong><span>Preuve de livraison, incidents tracés, avis optionnel.</span></div></div>
+            </div>
+          </article>
+
+          <article class="panel" data-panel="regles" id="panel-regles" hidden>
+            <h3>Règles non négociables</h3>
+            <p class="sub">Garanties produit reprises du cahier des charges.</p>
+            <div class="chips">
+              <span class="chip gold">EUR ≠ USD sans taux</span>
+              <span class="chip">QR sans données perso</span>
+              <span class="chip ok">Isolation Madrid / Kinshasa</span>
+              <span class="chip">Facture immuable</span>
+              <span class="chip">1 référence / pièce</span>
+            </div>
+            <div class="steps">
+              <div class="step"><div class="num">A</div><div><strong>Tarif estimatif</strong><span>Jamais fermé avant poids réel et frais confirmés.</span></div></div>
+              <div class="step"><div class="num">B</div><div><strong>Suivi public minimal</strong><span>Le token n’expose ni téléphone, ni prix, ni dossier complet.</span></div></div>
+              <div class="step"><div class="num">C</div><div><strong>Audit serveur</strong><span>Chaque changement de statut / tarif / paiement est journalisé.</span></div></div>
+            </div>
+          </article>
+
+          <article class="panel" data-panel="roles" id="panel-roles" hidden>
+            <h3>Rôles & ergonomie</h3>
+            <p class="sub">Chaque profil voit l’essentiel — pas un dashboard générique.</p>
+            <div class="steps">
+              <div class="step"><div class="num">SA</div><div><strong>Superadmin</strong><span>Paramètres globaux, permissions, feature flags.</span></div></div>
+              <div class="step"><div class="num">RX</div><div><strong>Réception</strong><span>File du jour, pesée, documents, association manifeste.</span></div></div>
+              <div class="step"><div class="num">LV</div><div><strong>Livraison</strong><span>Disponibles, preuves, incidents.</span></div></div>
+              <div class="step"><div class="num">€$</div><div><strong>Comptable</strong><span>Factures, acomptes, caisses séparées EUR/USD.</span></div></div>
+              <div class="step"><div class="num">CL</div><div><strong>Client</strong><span>Suivi, documents, soldes — simple et rassurant.</span></div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reveal" id="architecture">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Technique</p>
+          <h2>Architecture visuelle</h2>
+          <p class="lead">Diagrammes Mermaid du dossier <code>docs/diagrams</code>, rendus ici pour présentation client ou équipe.</p>
+        </div>
+        <a class="btn btn-line" href="./reader.html?doc=../ARCHITECTURE.md">Lire l’architecture</a>
+      </div>
+
+      <div class="diagram-tabs" id="diagramTabs"></div>
+      <div class="mermaid-wrap">
+        <pre class="mermaid" id="mermaidTarget"></pre>
+      </div>
+    </section>
+
+    <section class="section reveal" id="lots">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Livraison</p>
+          <h2>Lots successifs</h2>
+          <p class="lead">Beau, oui — mais surtout livrable. On avance par lots, pas en big bang.</p>
+        </div>
+        <a class="btn btn-dark" href="./reader.html?doc=../PLAN-DETAILLE.md">Lire le plan détaillé</a>
+      </div>
+      <div class="lot-strip">
+        <div class="lot"><b>Lot A</b><span>Site, pré-résa, colis, facture, QR, suivi, rôles, dashboard.</span></div>
+        <div class="lot"><b>Lot B</b><span>Manifestes, stocks, caisses, livraisons, audit avancé.</span></div>
+        <div class="lot"><b>Lot C</b><span>Corridor inverse, documents, reporting approfondi.</span></div>
+        <div class="lot"><b>Lot D</b><span>Transfert d’argent — uniquement après conformité.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="brand">MALAÏKA <em style="color:var(--gold);font-style:italic;font-family:var(--font-display)">Freight</em></div>
+      <div>Documentation studio v1 · Madrid ↔ Kinshasa · Données fictives uniquement en démo</div>
+    </div>
+  </footer>
+
+  <script>
+    const parcoursItems = [
+      { id: "flux", label: "Flux principal" },
+      { id: "regles", label: "Règles critiques" },
+      { id: "roles", label: "Rôles" }
+    ];
+
+    const nav = document.getElementById("parcoursNav");
+    parcoursItems.forEach((item, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = item.label;
+      btn.className = i === 0 ? "active" : "";
+      btn.addEventListener("click", () => {
+        parcoursItems.forEach((x) => {
+          document.getElementById("panel-" + x.id).hidden = x.id !== item.id;
+        });
+        [...nav.querySelectorAll("button")].forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+      nav.appendChild(btn);
+    });
+
+    const diagrams = {
+      "Flux métier": `flowchart LR
+  A["Prospect"] --> B["Estimateur"]
+  B --> C["Pré-réservation"]
+  C --> D["Réception"]
+  D --> E["Colis + pièces"]
+  E --> F["Facture PDF"]
+  E --> G["Étiquette QR"]
+  E --> H["Scans"]
+  H --> I["Suivi public"]
+  H --> J["Remise"]`,
+      "Architecture globale": `flowchart TB
+  subgraph Acteurs
+    V[Visiteur]
+    C[Client]
+    A[Agents]
+  end
+  subgraph Surfaces
+    P[Site public]
+    CL[Espace client]
+    AD[Admin]
+  end
+  subgraph Core
+    L[Laravel modulaire]
+    DB[(MySQL)]
+  end
+  V --> P
+  C --> CL
+  A --> AD
+  P --> L
+  CL --> L
+  AD --> L
+  L --> DB`,
+      "Couches app": `flowchart TB
+  UI[Blade · Tailwind · Alpine] --> HTTP[Controllers · Requests]
+  HTTP --> APP[Actions · Services]
+  APP --> DOM[Enums · States · Policies]
+  DOM --> INF[Eloquent · Storage · Queue · PDF]`,
+      "États colis": `stateDiagram-v2
+  [*] --> PreReserve
+  PreReserve --> Recu
+  Recu --> Preparation
+  Preparation --> Transit
+  Transit --> Arrivee
+  Arrivee --> Dedouanement
+  Dedouanement --> Disponible
+  Disponible --> Livre
+  Recu --> Incident
+  Transit --> Incident
+  Incident --> Preparation
+  Livre --> [*]`,
+      "Déploiement": `flowchart LR
+  U[Utilisateurs] --> N[Nginx + TLS]
+  N --> APP[Laravel PHP-FPM]
+  APP --> DB[(MySQL)]
+  APP --> Q[Queue worker]
+  Q --> M[Email]
+  APP --> S[Fichiers / PDF]`
+    };
+
+    const tabs = document.getElementById("diagramTabs");
+    const target = document.getElementById("mermaidTarget");
+    let current = Object.keys(diagrams)[0];
+
+    async function renderDiagram(name) {
+      current = name;
+      [...tabs.querySelectorAll("button")].forEach((b) => {
+        b.classList.toggle("active", b.dataset.name === name);
+      });
+      const code = diagrams[name];
+      target.removeAttribute("data-processed");
+      target.textContent = code;
+      if (window.mermaidReady) {
+        await window.mermaidReady.run({ nodes: [target] });
+      }
+    }
+
+    Object.keys(diagrams).forEach((name, i) => {
+      const b = document.createElement("button");
+      b.textContent = name;
+      b.dataset.name = name;
+      if (i === 0) b.classList.add("active");
+      b.addEventListener("click", () => renderDiagram(name));
+      tabs.appendChild(b);
+    });
+
+    window.addEventListener("load", () => {
+      setTimeout(() => renderDiagram(current), 80);
+    });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("visible");
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+    const sections = ["docs", "parcours", "architecture", "lots"];
+    const navLinks = [...document.querySelectorAll(".topnav nav a")].filter((a) => a.hash);
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (!e.isIntersecting) return;
+        navLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+      });
+    }, { rootMargin: "-40% 0px -50% 0px" });
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) spy.observe(el);
+    });
+  </script>
+</body>
+</html>

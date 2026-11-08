@@ -1,0 +1,60 @@
+%% Malaïka Freight — Architecture de déploiement
+
+flowchart TB
+  subgraph Users["Utilisateurs"]
+    U1["Navigateur mobile"]
+    U2["Navigateur desktop"]
+    U3["Agent scanner / impression"]
+  end
+
+  subgraph Edge["Frontière"]
+    DNS["DNS · Domaine société"]
+    TLS["HTTPS · Certificat TLS"]
+    NGX["Reverse proxy Nginx"]
+  end
+
+  subgraph AppTier["Application"]
+    PHP["PHP-FPM · Laravel"]
+    QUEUE["Worker queue\nphp artisan queue:work"]
+    CRON["Scheduler\nphp artisan schedule:run"]
+  end
+
+  subgraph DataTier["Données"]
+    MYSQL[("MySQL 8")]
+    REDIS[("Redis optionnel\ncache · queue")]
+    DISK["Stockage fichiers\nlocal ou objet"]
+  end
+
+  subgraph Ops["Exploitation"]
+    BAK["Backups planifiés\nDB + fichiers"]
+    MON["Monitoring uptime / disque / queue"]
+    LOGS["Logs applicatifs"]
+  end
+
+  subgraph Ext["Externes"]
+    SMTP["Provider email"]
+  end
+
+  U1 & U2 & U3 --> DNS --> TLS --> NGX --> PHP
+  PHP --> MYSQL
+  PHP --> REDIS
+  PHP --> DISK
+  QUEUE --> MYSQL
+  QUEUE --> REDIS
+  QUEUE --> SMTP
+  CRON --> PHP
+  BAK --> MYSQL
+  BAK --> DISK
+  MON --> PHP
+  MON --> QUEUE
+  PHP --> LOGS
+
+  subgraph Dev["Environnement développement"]
+    LAR["Laragon Windows"]
+    LPHP["PHP Artisan serve / vhost"]
+    LM["MySQL local"]
+    MT["Mailtrap"]
+  end
+
+  LAR --> LPHP --> LM
+  LPHP --> MT

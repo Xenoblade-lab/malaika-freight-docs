@@ -1,0 +1,31 @@
+%% Malaïka Freight — Machine à états des colis (Lot A)
+
+stateDiagram-v2
+  [*] --> PreReserve : pré-réservation
+  PreReserve --> RecuMadrid : réception Madrid
+  PreReserve --> RecuKinshasa : réception Kinshasa
+  PreReserve --> Annule : annulation
+
+  RecuMadrid --> EnPreparation
+  RecuKinshasa --> EnPreparation
+  EnPreparation --> EnTransit : départ
+  EnTransit --> ArriveDestination
+  ArriveDestination --> EnDedouanement
+  EnDedouanement --> DisponibleRetrait
+  DisponibleRetrait --> Livre : remise confirmée
+
+  RecuMadrid --> Incident
+  RecuKinshasa --> Incident
+  EnPreparation --> Incident
+  EnTransit --> Incident
+  ArriveDestination --> Incident
+  EnDedouanement --> Incident
+  DisponibleRetrait --> Incident
+
+  Incident --> EnPreparation : reprise
+  Incident --> EnTransit : reprise
+  Incident --> DisponibleRetrait : reprise
+  Incident --> Annule
+
+  Livre --> [*]
+  Annule --> [*]

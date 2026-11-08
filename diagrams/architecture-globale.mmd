@@ -1,0 +1,56 @@
+%% Malaïka Freight — Architecture globale du système
+%% Ouvrir avec un visualiseur Mermaid (GitHub, VS Code, mermaid.live)
+
+flowchart TB
+  subgraph Actors["Acteurs"]
+    V["Visiteur / Prospect"]
+    C["Client authentifié"]
+    AM["Agent Madrid"]
+    AK["Agent Kinshasa"]
+    CP["Comptable / Direction"]
+  end
+
+  subgraph Surfaces["Surfaces applicatives"]
+    PUB["Site public\nestimateur · pré-résa · suivi"]
+    CLI["Espace client"]
+    ADM["Back-office admin"]
+    API["API REST /v1\nSanctum"]
+  end
+
+  subgraph Core["Application Malaïka Freight Laravel"]
+    APP["Couche application\nActions · Services · Policies"]
+    DOM["Domaine métier\nRéservations · Colis · Facturation · Tracking"]
+  end
+
+  subgraph Data["Données & infra"]
+    DB[("MySQL 8")]
+    FS["Storage fichiers\nphotos · PDF · preuves"]
+    Q["Queues\nemails · jobs"]
+  end
+
+  subgraph External["Services externes"]
+    SMTP["SMTP / Email"]
+    WA["WhatsApp Business\nlien CTA"]
+    FUT["Futur: paiement · transport · mobile"]
+  end
+
+  V --> PUB
+  C --> CLI
+  C --> PUB
+  AM --> ADM
+  AK --> ADM
+  CP --> ADM
+  AM --> API
+  AK --> API
+
+  PUB --> APP
+  CLI --> APP
+  ADM --> APP
+  API --> APP
+  APP --> DOM
+  DOM --> DB
+  DOM --> FS
+  APP --> Q
+  Q --> SMTP
+  PUB -.-> WA
+  APP -.-> FUT
